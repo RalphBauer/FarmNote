@@ -1,0 +1,4 @@
+additionalProperties:
+  supportsES6: true
+  npmName: http-client
+  npmVersion: 1.0.0

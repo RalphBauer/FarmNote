@@ -1,0 +1,25 @@
+{
+  "name": "farmnote",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "preinstall": "npm link ./http-client",
+    "dev": "vite",
+    "build": "vite build --mode production",
+    "preview": "vite preview",
+    "openapi-generator-cli": "npx -y @openapitools/openapi-generator-cli generate -g typescript-fetch -i http://127.0.0.1:8000/openapi.json -o ./http-client -c openapi-generator-cli-config.yaml && cd ./http-client && npm install"
+  },
+  "dependencies": {
+    "http-client": "file:http-client",
+    "vue": "^3.4.29",
+    "vue-router": "^4.3.3"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.5",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.45",
+    "tailwindcss": "^3.4.10",
+    "vite": "^5.3.1"
+  }
+}

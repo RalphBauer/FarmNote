@@ -1,0 +1,7 @@
+pylint
+fastapi[standard]
+pydantic-settings
+uvicorn[standard]
+sqlalchemy
+httpx
+pytest

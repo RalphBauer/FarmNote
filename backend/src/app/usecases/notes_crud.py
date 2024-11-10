@@ -1,5 +1,7 @@
 import datetime
+from fastapi import HTTPException
 
+__FAKE_DB_NOTES = {}
 
 def create_example_notes():
     """
@@ -27,3 +29,92 @@ def create_example_notes():
     ]
 
     return notes
+
+
+def check_token_existence(token: str):
+    """
+    Check if a token is in __FAKE_DB_NOTES
+    """
+    if token not in __FAKE_DB_NOTES:
+        raise HTTPException(status_code=401, detail="Token not found")
+
+
+def check_note_existence(token: str, note_id: int):
+    """
+    Check if a token has this specified note_id
+    """
+    tokennotes = __FAKE_DB_NOTES[token]
+    if note_id < 0 or note_id >= len(tokennotes):
+        raise HTTPException(status_code=404, detail="Note not found")
+
+
+def create_note(token: str, note_data):
+    """
+    Create a new note
+    """
+
+    # Input validation
+    if note_data["field_id"] < 0:
+        raise HTTPException(status_code=422, detail="field_id should not be less than zero.")
+    if note_data["latitude"] < 0:
+        raise HTTPException(status_code=422, detail="latitude should not be less than zero.")
+    if note_data["longitude"] < 0:
+        raise HTTPException(status_code=422, detail="longitude should not be less than zero.")
+
+    if token not in __FAKE_DB_NOTES:
+        __FAKE_DB_NOTES[token] = []
+    note_id = len(__FAKE_DB_NOTES[token])
+    new_note = {
+        "id": note_id,
+        "session_id": 0,
+        "content": note_data["content"],
+        "latitude": note_data["latitude"],
+        "longitude": note_data["longitude"],
+        "field_id": note_data["field_id"],
+        "creation_date": datetime.datetime.utcnow(),
+        "updated_date": datetime.datetime.utcnow(),
+    }
+    __FAKE_DB_NOTES[token].append(new_note)
+    return new_note
+
+
+def read_notes(token: str):
+    """
+    read all notes of this specific token
+    """
+    check_token_existence(token)
+    return __FAKE_DB_NOTES.get(token, [])
+
+
+def read_note(token: str, note_id: int):
+    """
+    read a specific note of a specific token
+    """
+    check_token_existence(token)
+    check_note_existence(token, note_id)
+    return __FAKE_DB_NOTES[token][note_id]
+
+
+def update_note(token: str, note_id, note_data):
+    """
+    update a specific note of a specific token
+    """
+    check_token_existence(token)
+    check_note_existence(token, note_id)
+    existing_note = __FAKE_DB_NOTES[token][note_id]
+    existing_note["content"] = note_data.get("content", existing_note["content"])
+    existing_note["latitude"] = note_data.get("latitude", existing_note["latitude"])
+    existing_note["longitude"] = note_data.get("longitude", existing_note["longitude"])
+    existing_note["field_id"] = note_data.get("field_id", existing_note["field_id"])
+    existing_note["updated_date"] = datetime.datetime.utcnow()
+    return existing_note
+
+
+def delete_note(token: str, note_id: int):
+    """
+    delete a specific note of a specific token
+    """
+    check_token_existence(token)
+    check_note_existence(token, note_id)
+    del __FAKE_DB_NOTES[token][note_id]
+    return {"message": "Note deleted successfully"}

@@ -21,7 +21,7 @@ router = APIRouter(
                 },
             )
 def read_notes(token: str = Depends(dependencies.get_session_token)):
-    notes = usecases.create_example_notes()
+    notes = usecases.notes_crud.read_notes(token)
 
     return notes
 

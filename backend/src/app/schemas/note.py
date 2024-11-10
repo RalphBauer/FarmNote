@@ -2,6 +2,7 @@ from datetime import datetime
 from pydantic import BaseModel
 from typing import Optional
 
+
 class NoteBase(BaseModel):
     """
     Base schema for a note
@@ -19,6 +20,7 @@ class Note(NoteBase):
     session_id: int
     creation_date: datetime
     updated_date: datetime
+
 
 class NoteCreate(NoteBase):
     """

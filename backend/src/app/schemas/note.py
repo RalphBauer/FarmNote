@@ -37,3 +37,4 @@ class NoteUpdate(NoteBase):
     content: Optional[str] = None
     latitude: Optional[float] = None
     longitude: Optional[float] = None
+    field_id: Optional[int] = None

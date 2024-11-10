@@ -52,6 +52,15 @@ def create_note(token: str, note_data):
     """
     Create a new note
     """
+
+    # Input validation
+    if note_data["field_id"] < 0:
+        raise HTTPException(status_code=422, detail="field_id should not be less than zero.")
+    if note_data["latitude"] < 0:
+        raise HTTPException(status_code=422, detail="latitude should not be less than zero.")
+    if note_data["longitude"] < 0:
+        raise HTTPException(status_code=422, detail="longitude should not be less than zero.")
+
     if token not in __FAKE_DB_NOTES:
         __FAKE_DB_NOTES[token] = []
     note_id = len(__FAKE_DB_NOTES[token])

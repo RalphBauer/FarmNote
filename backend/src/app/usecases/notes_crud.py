@@ -37,3 +37,12 @@ def check_token_existence(token: str):
     """
     if token not in __FAKE_DB_NOTES:
         raise HTTPException(status_code=401, detail="Token not found")
+
+
+def check_note_existence(token: str, note_id: int):
+    """
+    Check if a token has this specified note_id
+    """
+    tokennotes = __FAKE_DB_NOTES[token]
+    if note_id < 0 or note_id >= len(tokennotes):
+        raise HTTPException(status_code=404, detail="Note not found")

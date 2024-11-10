@@ -66,3 +66,11 @@ def create_note(token: str, note_data):
     }
     __FAKE_DB_NOTES[token].append(new_note)
     return new_note
+
+
+def read_notes(token: str):
+    """
+    read all notes of this specific token
+    """
+    check_token_existence(token)
+    return __FAKE_DB_NOTES.get(token, [])

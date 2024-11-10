@@ -144,6 +144,7 @@ def test_update_note_success():
     assert json_result['content'] == 'Update'
     assert json_result['latitude'] == 48.5
     assert json_result['longitude'] == 15.4
+    assert json_result['field_id'] == 5
 
 
 def test_update_note_token_not_found():

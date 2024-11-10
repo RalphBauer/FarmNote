@@ -46,3 +46,23 @@ def check_note_existence(token: str, note_id: int):
     tokennotes = __FAKE_DB_NOTES[token]
     if note_id < 0 or note_id >= len(tokennotes):
         raise HTTPException(status_code=404, detail="Note not found")
+
+
+def create_note(token: str, note_data):
+    """
+    Create a new note
+    """
+    if token not in __FAKE_DB_NOTES:
+        __FAKE_DB_NOTES[token] = []
+    note_id = len(__FAKE_DB_NOTES[token])
+    new_note = {
+        "id": note_id,
+        "session_id": 0,
+        "content": note_data["content"],
+        "latitude": note_data["latitude"],
+        "longitude": note_data["longitude"],
+        "creation_date": datetime.datetime.utcnow(),
+        "updated_date": datetime.datetime.utcnow(),
+    }
+    __FAKE_DB_NOTES[token].append(new_note)
+    return new_note

@@ -1,6 +1,8 @@
 import datetime
 from fastapi import HTTPException
 
+__FAKE_DB_NOTES = {}
+
 def create_example_notes():
     """
     Return a list of example notes for testing purposes

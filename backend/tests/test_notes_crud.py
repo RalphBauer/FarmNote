@@ -88,6 +88,7 @@ def test_read_note_success():
     assert json_result['content'] == 'My first note'
     assert json_result['latitude'] == 48.1271
     assert json_result['longitude'] == 15.1247
+    assert json_result['field_id'] == 0
 
 
 def test_something():

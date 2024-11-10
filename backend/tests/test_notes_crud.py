@@ -91,7 +91,7 @@ def test_read_note_success():
     assert json_result['field_id'] == 0
 
 
-def test_something():
+def test_read_note_token_not_found():
     response = client.get(f'/notes/{test_note_id}',
                            params={
                                 'token': invalid_test_token

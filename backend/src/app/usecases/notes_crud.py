@@ -61,6 +61,7 @@ def create_note(token: str, note_data):
         "content": note_data["content"],
         "latitude": note_data["latitude"],
         "longitude": note_data["longitude"],
+        "field_id": note_data["field_id"],
         "creation_date": datetime.datetime.utcnow(),
         "updated_date": datetime.datetime.utcnow(),
     }

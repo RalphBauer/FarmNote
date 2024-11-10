@@ -168,7 +168,8 @@ def test_update_note_not_found():
                               json={
                                   'content': 'Update',
                                   'latitude': 48.5,
-                                  'longitude': 15.4
+                                  'longitude': 15.4,
+                                  'field_id': 5
                               },
                               params={
                                   'token': test_token

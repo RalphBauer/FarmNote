@@ -215,3 +215,64 @@ def test_delete_note_token_not_found():
                            )
 
     assert response.status_code == 401, 'should return status code 401 - invalid token'
+
+def test_create_note_invalid_input():
+    response = client.post('/notes/',
+                           json={
+                               'content': 'My first note',  # Valid field
+                               # 'latitude' is missing (invalid input)
+                               'longitude': 15.1247,
+                               'field_id': 0
+                           }, params={
+            'token': test_token
+        }
+                           )
+
+    assert response.status_code == 422, 'should return status code 422 - invalid input'
+    assert 'detail' in response.json(), 'should return a detail message about the validation error'
+
+
+    response = client.post('/notes/',
+                           json={
+                               'content': 'My first note',
+                               'latitude': 48.5,
+                               'longitude': 15.1247,
+                               'field_id': -1
+                           }, params={
+            'token': test_token
+        }
+                           )
+
+    assert response.status_code == 422, 'should return status code 422 - invalid input'
+    assert 'detail' in response.json(), 'should return a detail message about the validation error'
+
+
+    response = client.post('/notes/',
+                           json={
+                               'content': 'My first note',
+                               'latitude': 48.5,
+                               'longitude': -1,
+                               'field_id': 8
+                           }, params={
+            'token': test_token
+        }
+                       )
+
+    assert response.status_code == 422, 'should return status code 422 - invalid input'
+    assert 'detail' in response.json(), 'should return a detail message about the validation error'
+
+
+    response = client.post('/notes/',
+                           json={
+                               'content': 'My first note',
+                               'latitude': -1,
+                               'longitude': 15.1245,
+                               'field_id': 8
+                           }, params={
+            'token': test_token
+        }
+                           )
+
+    assert response.status_code == 422, 'should return status code 422 - invalid input'
+    assert 'detail' in response.json(), 'should return a detail message about the validation error'
+

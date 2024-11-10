@@ -68,3 +68,17 @@ def read_note(note_id: int, token: str = Depends(dependencies.get_session_token)
             )
 def update_note(note_id: int, note_data: schemas.note.NoteUpdate, token: str = Depends(dependencies.get_session_token)):
     return usecases.notes_crud.update_note(token, note_id, note_data.dict())
+
+
+@router.delete("/{note_id}",
+               response_model=dict,
+               operation_id='deleteNote',
+               description='''
+                   Delete a specific note by ID.
+               ''',
+               responses={
+                   404: {"description": "Note not found"},
+               },
+               )
+def delete_note(note_id: int, token: str = Depends(dependencies.get_session_token)):
+    return usecases.notes_crud.delete_note(token, note_id)

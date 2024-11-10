@@ -39,3 +39,17 @@ def read_notes(token: str = Depends(dependencies.get_session_token)):
              )
 def create_note(note_data: schemas.note.NoteCreate, token: str = Depends(dependencies.get_session_token)):
     return usecases.notes_crud.create_note(token, note_data.dict())
+
+
+@router.get("/{note_id}",
+            response_model=schemas.Note,
+            operation_id='readNote',
+            description='''
+                Return a specific note by ID.
+            ''',
+            responses={
+                404: {"description": "Note not found"},
+            },
+            )
+def read_note(note_id: int, token: str = Depends(dependencies.get_session_token)):
+    return usecases.notes_crud.read_note(token, note_id)

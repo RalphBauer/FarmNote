@@ -152,7 +152,8 @@ def test_update_note_token_not_found():
                               json={
                                   'content': 'Update',
                                   'latitude': 48.5,
-                                  'longitude': 15.4
+                                  'longitude': 15.4,
+                                  'field_id': 5
                               },
                               params={
                                   'token': invalid_test_token

@@ -10,6 +10,7 @@ class NoteBase(BaseModel):
     content: str
     latitude: float
     longitude: float
+    field_id: int
 
 
 class Note(NoteBase):

@@ -1,5 +1,5 @@
 import datetime
-
+from fastapi import HTTPException
 
 def create_example_notes():
     """

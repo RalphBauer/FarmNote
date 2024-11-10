@@ -116,7 +116,8 @@ def test_update_note_success():
                               json={
                                   'content': 'Update',
                                   'latitude': 48.5,
-                                  'longitude': 15.4
+                                  'longitude': 15.4,
+                                  'field_id': 5
                               },
                               params={
                                   'token': test_token
@@ -129,6 +130,7 @@ def test_update_note_success():
     assert json_result['content'] == 'Update'
     assert json_result['latitude'] == 48.5
     assert json_result['longitude'] == 15.4
+    assert json_result['field_id'] == 5
 
     response = client.get(f'/notes/{test_note_id}',
                               params={

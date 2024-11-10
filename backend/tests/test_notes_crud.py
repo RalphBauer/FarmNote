@@ -29,7 +29,8 @@ def test_create_note_success():
                             json={
                                 'content': 'My first note',
                                 'latitude': 48.1271,
-                                'longitude': 15.1247
+                                'longitude': 15.1247,
+                                'field_id': 0
                             }, params={
                                 'token': test_token
                             }
@@ -43,6 +44,7 @@ def test_create_note_success():
     assert x['content'] == 'My first note'
     assert x['latitude'] == 48.1271
     assert x['longitude'] == 15.1247
+    assert x['field_id'] == 0
     assert x['id'] >= 0, 'note id should be greater or equal than 0'
     assert x['session_id'] >= 0, 'session id should be greater or equal than 0'
     assert (parse_datetime(x['creation_date']) > (datetime.utcnow() - timedelta(minutes=1))) == True, 'creation_date should be the current time'

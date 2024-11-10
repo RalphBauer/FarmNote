@@ -20,3 +20,9 @@ class Note(NoteBase):
     session_id: int
     creation_date: datetime
     updated_date: datetime
+
+class NoteCreate(NoteBase):
+    """
+    Schema for creating a new note
+    """
+    pass

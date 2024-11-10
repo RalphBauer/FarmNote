@@ -97,3 +97,13 @@ def update_note(token: str, note_id, note_data):
     existing_note["longitude"] = note_data.get("longitude", existing_note["longitude"])
     existing_note["updated_date"] = datetime.datetime.utcnow()
     return existing_note
+
+
+def delete_note(token: str, note_id: int):
+    """
+    delete a specific note of a specific token
+    """
+    check_token_existence(token)
+    check_note_existence(token, note_id)
+    del __FAKE_DB_NOTES[token][note_id]
+    return {"message": "Note deleted successfully"}

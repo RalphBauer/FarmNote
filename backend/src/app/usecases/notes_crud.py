@@ -74,3 +74,12 @@ def read_notes(token: str):
     """
     check_token_existence(token)
     return __FAKE_DB_NOTES.get(token, [])
+
+
+def read_note(token: str, note_id: int):
+    """
+    read a specific note of a specific token
+    """
+    check_token_existence(token)
+    check_note_existence(token, note_id)
+    return __FAKE_DB_NOTES[token][note_id]

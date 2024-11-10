@@ -24,3 +24,18 @@ def read_notes(token: str = Depends(dependencies.get_session_token)):
     notes = usecases.create_example_notes()
 
     return notes
+
+
+@router.post("/",
+             response_model=schemas.Note,
+             operation_id='createNote',
+             description='''
+                 Create a new note for the session.
+             ''',
+             responses={
+                 201: {"description": "Note created successfully"},
+                 400: {"description": "Invalid input"},
+             },
+             )
+def create_note(note_data: schemas.note.NoteCreate, token: str = Depends(dependencies.get_session_token)):
+    return usecases.notes_crud.create_note(token, note_data.dict())

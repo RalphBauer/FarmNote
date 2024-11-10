@@ -83,3 +83,17 @@ def read_note(token: str, note_id: int):
     check_token_existence(token)
     check_note_existence(token, note_id)
     return __FAKE_DB_NOTES[token][note_id]
+
+
+def update_note(token: str, note_id, note_data):
+    """
+    update a specific note of a specific token
+    """
+    check_token_existence(token)
+    check_note_existence(token, note_id)
+    existing_note = __FAKE_DB_NOTES[token][note_id]
+    existing_note["content"] = note_data.get("content", existing_note["content"])
+    existing_note["latitude"] = note_data.get("latitude", existing_note["latitude"])
+    existing_note["longitude"] = note_data.get("longitude", existing_note["longitude"])
+    existing_note["updated_date"] = datetime.datetime.utcnow()
+    return existing_note

@@ -96,6 +96,7 @@ def update_note(token: str, note_id, note_data):
     existing_note["content"] = note_data.get("content", existing_note["content"])
     existing_note["latitude"] = note_data.get("latitude", existing_note["latitude"])
     existing_note["longitude"] = note_data.get("longitude", existing_note["longitude"])
+    existing_note["field_id"] = note_data.get("field_id", existing_note["field_id"])
     existing_note["updated_date"] = datetime.datetime.utcnow()
     return existing_note
 

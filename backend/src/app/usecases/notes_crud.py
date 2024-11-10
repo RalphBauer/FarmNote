@@ -29,3 +29,11 @@ def create_example_notes():
     ]
 
     return notes
+
+
+def check_token_existence(token: str):
+    """
+    Check if a token is in __FAKE_DB_NOTES
+    """
+    if token not in __FAKE_DB_NOTES:
+        raise HTTPException(status_code=401, detail="Token not found")

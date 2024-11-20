@@ -8,7 +8,7 @@ from .routers import notes_router
 app = FastAPI(
     title="FarmNote",
     summary="Http API for the App FarmNote",
-    version="1.0.0",
+    version="1.0.1",
     contact={
         "name": "Your Name (Developer)",
         "url": "https://git.fhwn.ac.at/your-repository/",

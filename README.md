@@ -1,5 +1,7 @@
 # FarmNote
 
+## GitLab
+* GitLab Link: [https://git.fhwn.ac.at/](https://git.fhwn.ac.at/)
 
 ## Local Setup
 

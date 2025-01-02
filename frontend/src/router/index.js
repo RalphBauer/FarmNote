@@ -1,15 +1,49 @@
-import {createRouter, createWebHistory} from 'vue-router'
-import HomeView from "@/views/HomeView.vue";
+import { createRouter, createWebHistory } from 'vue-router';
+import StartPage from "@/views/StartPage.vue";
+import LoadSessionPage from "@/views/LoadSessionPage.vue";
+import MainPage from "@/views/MainPage.vue";
+import CreateNote from "@/views/CreateNote.vue";
+import NoteList from "@/views/NoteList.vue";
+import EditNote from "@/views/EditNote.vue";
+
+const routes = [
+  {
+    path: '/',
+    name: 'start',
+    component: StartPage
+  },
+  {
+    path: '/load-session',
+    name: 'load-session',
+    component: LoadSessionPage
+  },
+  {
+    path: '/main-page/:token',  // Füge den Token-Parameter hinzu
+    name: 'main-page',
+    component: MainPage,
+    props: true  // Übergebe den Token als Prop an die MainPage-Komponente
+  },
+  {
+    path: "/create-note",
+    name: "create-note",
+    component: CreateNote,
+  },
+  {
+    path: '/note-list',
+    name: 'note-list',
+    component: NoteList,
+  },
+  {
+    path: '/edit-note ',  // Route für das Bearbeiten der Notiz
+    name: 'edit-note',
+    component: EditNote,
+    props: true
+  }
+];
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [
-    {
-      path: '/',
-      name: 'home',
-      component: HomeView
-    },
-  ]
-})
+  routes
+});
 
-export default router
+export default router;

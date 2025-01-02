@@ -1,59 +1,10 @@
-import datetime
+from sqlalchemy.orm import Session
 from fastapi import HTTPException
+from ..models.models import Note
+from datetime import datetime
+from .sessions_crud import check_token_existence
 
-__FAKE_DB_NOTES = {}
-
-def create_example_notes():
-    """
-    Return a list of example notes for testing purposes
-    """
-    notes = [
-        {
-            "id": 0,
-            "session_id": 0,
-            "content": 'Hello World',
-            "latitude": 48.1271,
-            "longitude": 15.1247,
-            "creation_date": datetime.datetime.utcnow(),
-            "updated_date": datetime.datetime.utcnow(),
-        },
-        {
-            "id": 1,
-            "session_id": 0,
-            "content": 'Example Note 2',
-            "latitude": 48.21,
-            "longitude": 15.125,
-            "creation_date": datetime.datetime.utcnow(),
-            "updated_date": datetime.datetime.utcnow(),
-        }
-    ]
-
-    return notes
-
-
-def check_token_existence(token: str):
-    """
-    Check if a token is in __FAKE_DB_NOTES
-    """
-    if token not in __FAKE_DB_NOTES:
-        raise HTTPException(status_code=401, detail="Token not found")
-
-
-def check_note_existence(token: str, note_id: int):
-    """
-    Check if a token has this specified note_id
-    """
-    tokennotes = __FAKE_DB_NOTES[token]
-    if note_id < 0 or note_id >= len(tokennotes):
-        raise HTTPException(status_code=404, detail="Note not found")
-
-
-def create_note(token: str, note_data):
-    """
-    Create a new note
-    """
-
-    # Input validation
+def create_note(db: Session, token: str, note_data):
     if note_data["field_id"] < 0:
         raise HTTPException(status_code=422, detail="field_id should not be less than zero.")
     if note_data["latitude"] < 0:
@@ -61,60 +12,55 @@ def create_note(token: str, note_data):
     if note_data["longitude"] < 0:
         raise HTTPException(status_code=422, detail="longitude should not be less than zero.")
 
-    if token not in __FAKE_DB_NOTES:
-        __FAKE_DB_NOTES[token] = []
-    note_id = len(__FAKE_DB_NOTES[token])
-    new_note = {
-        "id": note_id,
-        "session_id": 0,
-        "content": note_data["content"],
-        "latitude": note_data["latitude"],
-        "longitude": note_data["longitude"],
-        "field_id": note_data["field_id"],
-        "creation_date": datetime.datetime.utcnow(),
-        "updated_date": datetime.datetime.utcnow(),
-    }
-    __FAKE_DB_NOTES[token].append(new_note)
+    new_note = Note(
+        content=note_data["content"],
+        latitude=note_data["latitude"],
+        longitude=note_data["longitude"],
+        field_id=note_data["field_id"],
+        session_id=0,  # Hier könnte eine Logik zur Bestimmung der session_id erforderlich sein
+        token=token,
+        creation_date=datetime.utcnow(),
+        updated_date=datetime.utcnow(),
+    )
+
+    db.add(new_note)
+    db.commit()
+    db.refresh(new_note)
+
     return new_note
 
+def read_notes(db: Session, token: str):
+    check_token_existence(db, token)
+    return db.query(Note).filter(Note.token == token).all()
 
-def read_notes(token: str):
-    """
-    read all notes of this specific token
-    """
-    check_token_existence(token)
-    return __FAKE_DB_NOTES.get(token, [])
+def read_note(db: Session, token: str, note_id: int):
+    check_token_existence(db, token)
+    note = db.query(Note).filter(Note.token == token, Note.id == note_id).first()
+    if not note:
+        raise HTTPException(status_code=404, detail="Note not found")
+    return note
 
+def update_note(db: Session, token: str, note_id: int, note_data):
+    check_token_existence(db, token)
+    note = db.query(Note).filter(Note.token == token, Note.id == note_id).first()
+    if not note:
+        raise HTTPException(status_code=404, detail="Note not found")
 
-def read_note(token: str, note_id: int):
-    """
-    read a specific note of a specific token
-    """
-    check_token_existence(token)
-    check_note_existence(token, note_id)
-    return __FAKE_DB_NOTES[token][note_id]
+    note.content = note_data.get("content", note.content)
+    note.latitude = note_data.get("latitude", note.latitude)
+    note.longitude = note_data.get("longitude", note.longitude)
+    note.field_id = note_data.get("field_id", note.field_id)
+    note.updated_date = datetime.utcnow()
 
+    db.commit()
+    return note
 
-def update_note(token: str, note_id, note_data):
-    """
-    update a specific note of a specific token
-    """
-    check_token_existence(token)
-    check_note_existence(token, note_id)
-    existing_note = __FAKE_DB_NOTES[token][note_id]
-    existing_note["content"] = note_data.get("content", existing_note["content"])
-    existing_note["latitude"] = note_data.get("latitude", existing_note["latitude"])
-    existing_note["longitude"] = note_data.get("longitude", existing_note["longitude"])
-    existing_note["field_id"] = note_data.get("field_id", existing_note["field_id"])
-    existing_note["updated_date"] = datetime.datetime.utcnow()
-    return existing_note
+def delete_note(db: Session, token: str, note_id: int):
+    check_token_existence(db, token)
+    note = db.query(Note).filter(Note.token == token, Note.id == note_id).first()
+    if not note:
+        raise HTTPException(status_code=404, detail="Note not found")
 
-
-def delete_note(token: str, note_id: int):
-    """
-    delete a specific note of a specific token
-    """
-    check_token_existence(token)
-    check_note_existence(token, note_id)
-    del __FAKE_DB_NOTES[token][note_id]
+    db.delete(note)
+    db.commit()
     return {"message": "Note deleted successfully"}

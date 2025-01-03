@@ -42,6 +42,12 @@ export interface Note {
      * @type {number}
      * @memberof Note
      */
+    field_id: number;
+        /**
+     *
+     * @type {number}
+     * @memberof Note
+     */
     id: number;
     /**
      * 
@@ -70,6 +76,7 @@ export function instanceOfNote(value: object): value is Note {
     if (!('content' in value) || value['content'] === undefined) return false;
     if (!('latitude' in value) || value['latitude'] === undefined) return false;
     if (!('longitude' in value) || value['longitude'] === undefined) return false;
+    if (!('field_id' in value) || value['field_id'] === undefined) return false;
     if (!('id' in value) || value['id'] === undefined) return false;
     if (!('sessionId' in value) || value['sessionId'] === undefined) return false;
     if (!('creationDate' in value) || value['creationDate'] === undefined) return false;
@@ -90,6 +97,7 @@ export function NoteFromJSONTyped(json: any, ignoreDiscriminator: boolean): Note
         'content': json['content'],
         'latitude': json['latitude'],
         'longitude': json['longitude'],
+        'field_id': json['field_id'],
         'id': json['id'],
         'sessionId': json['session_id'],
         'creationDate': (new Date(json['creation_date'])),
@@ -106,6 +114,7 @@ export function NoteToJSON(value?: Note | null): any {
         'content': value['content'],
         'latitude': value['latitude'],
         'longitude': value['longitude'],
+        'field_id': value['field_id'].toString(),
         'id': value['id'],
         'session_id': value['sessionId'],
         'creation_date': ((value['creationDate']).toISOString()),

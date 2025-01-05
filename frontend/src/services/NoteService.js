@@ -4,21 +4,12 @@ import {NotesApi} from "http-client";
 class NoteService {
     notesApi = new NotesApi();
 
-    // Methode zum Erstellen einer Notiz
     async createNote(noteData, token) {
         try {
             return await this.notesApi.createNote({
                 token: token,
                 noteCreate: noteData
-            }, request => {
-                return {
-                    ...request.init,
-                    body: {
-                        ...request.init.body,
-                        field_id: noteData.field_id
-                    }
-                };
-            });
+            })
         } catch (error) {
             throw new Error('NoteService: Failed to create note: ' + error.message);
         }

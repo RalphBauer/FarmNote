@@ -109,7 +109,7 @@ export default {
         this.$router.push({name: 'main-page', params: {token: token}});
 
       } catch (error) {
-        console.error("Fehler beim Erstellen der Notiz:", error);
+        console.error("Fehler beim Erstellen der Notiz:", error.message);
       }
     },
 

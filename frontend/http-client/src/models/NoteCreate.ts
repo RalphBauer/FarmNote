@@ -37,6 +37,12 @@ export interface NoteCreate {
      * @memberof NoteCreate
      */
     longitude: number;
+    /**
+     *
+     * @type {number}
+     * @memberof NoteCreate
+     */
+    field_id: number;
 }
 
 /**
@@ -46,6 +52,7 @@ export function instanceOfNoteCreate(value: object): value is NoteCreate {
     if (!('content' in value) || value['content'] === undefined) return false;
     if (!('latitude' in value) || value['latitude'] === undefined) return false;
     if (!('longitude' in value) || value['longitude'] === undefined) return false;
+    if (!('field_id' in value) || value['field_id'] === undefined) return false;
     return true;
 }
 
@@ -62,6 +69,7 @@ export function NoteCreateFromJSONTyped(json: any, ignoreDiscriminator: boolean)
         'content': json['content'],
         'latitude': json['latitude'],
         'longitude': json['longitude'],
+        'field_id': json['field_id'],
     };
 }
 
@@ -74,6 +82,7 @@ export function NoteCreateToJSON(value?: NoteCreate | null): any {
         'content': value['content'],
         'latitude': value['latitude'],
         'longitude': value['longitude'],
+        'field_id': value['field_id'],
     };
 }
 

@@ -3,7 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 # Korrigierte URL für die SQLite-Datenbank
-SQLALCHEMY_DATABASE_URL = "sqlite:///C:/Temp/test.db"
+SQLALCHEMY_DATABASE_URL = "sqlite:///database.db"
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

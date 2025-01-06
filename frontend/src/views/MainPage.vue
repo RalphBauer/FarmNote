@@ -1,28 +1,22 @@
 <template>
   <div class="main-page">
-    <!-- FARM NOTE Label -->
     <FarmNoteLabel />
 
-    <!-- OpenStreetMap -->
     <div class="map-container">
       <MapComponent ref="mapComponent" />
     </div>
 
-    <!-- Buttons -->
     <div class="buttons">
-      <!-- Icon-Button links unten -->
-      <button @click="onButtonLeftClick" class="button-left">
-        <img src="../Invite.svg" alt="User Icon" />
+      <button @click="goToInvitePage" class="button-left">
+        <img src="../SVGS/Invite.svg" alt="User Icon" />
       </button>
 
-      <!-- Icon-Button für "Locate Me" -->
-      <button @click="locateMe" class="button-locate">
-        <img src="../Location_add.svg" alt="Locate Icon" />
+      <button @click="goToAddNotePage" class="button-locate">
+        <img src="../SVGS/Location_add.svg" alt="Locate Icon" />
       </button>
 
-      <!-- Icon-Button rechts unten für das Erstellen einer Notiz -->
-      <button @click="onButtonRightClick" class="button-right">
-        <img src="../Notes.svg" alt="Map Icon" />
+      <button @click="goToNoteListPage" class="button-right">
+        <img src="../SVGS/Notes.svg" alt="Map Icon" />
       </button>
     </div>
   </div>
@@ -34,36 +28,33 @@ import MapComponent from "@/components/MapComponent.vue";
 import Cookies from "js-cookie";
 
 export default {
+
   name: "MainPage",
+
   components: {
     FarmNoteLabel,
-    MapComponent,
+    MapComponent
   },
   methods: {
-    async locateMe() {
-      if (!navigator.geolocation) {
-        alert("Geolocation is not supported by your browser.");
-        return;
-      }
 
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          // Nachdem der Standort ermittelt wurde, navigiere zur CreateNote-Seite
-          this.$router.push({
-            name: "create-note", // Stelle sicher, dass diese Route im Router definiert ist
-            query: { latitude, longitude }, // Übergebe die Koordinaten als Query-Parameter
-          });
-        },
-        () => {
-          alert("Unable to retrieve your location.");
-        }
-      );
+
+    async goToAddNotePage() {
+
+      const latitude = Cookies.get('latitude')
+      const longitude = Cookies.get('longitude')
+
+      this.$router.push({
+              name: "create-note",
+              query: {latitude, longitude},
+      });
     },
-    onButtonLeftClick() {
+
+
+    goToInvitePage() {
       alert("Left Button Icon clicked!");
     },
-    onButtonRightClick() {
+
+    goToNoteListPage() {
       const token = Cookies.get("session_token");
       this.$router.push({ name: 'note-list', Query: { token: token } });
     },

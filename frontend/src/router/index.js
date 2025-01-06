@@ -3,7 +3,7 @@ import StartPage from "@/views/StartPage.vue";
 import LoadSessionPage from "@/views/LoadSessionPage.vue";
 import MainPage from "@/views/MainPage.vue";
 import CreateNote from "@/views/CreateNote.vue";
-import NoteList from "@/views/NoteList.vue";
+import NoteListPage from "@/views/NoteListPage.vue";
 import EditNote from "@/views/EditNote.vue";
 
 const routes = [
@@ -13,8 +13,8 @@ const routes = [
     component: StartPage
   },
   {
-    path: '/load-session',
-    name: 'load-session',
+    path: '/load-session-page',
+    name: 'load-session-page',
     component: LoadSessionPage
   },
   {
@@ -31,7 +31,7 @@ const routes = [
   {
     path: '/note-list',
     name: 'note-list',
-    component: NoteList,
+    component: NoteListPage,
   },
   {
     path: '/edit-note ',  // Route für das Bearbeiten der Notiz

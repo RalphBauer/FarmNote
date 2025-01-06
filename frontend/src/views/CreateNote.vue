@@ -1,11 +1,10 @@
 <template>
   <main class="flex flex-col items-center justify-between h-screen bg-gray-100">
-    <!-- FARM NOTE Label -->
+
     <FarmNoteLabel />
 
-    <!-- Eingabeformular -->
     <div class="form-container">
-      <!-- Eingabefeld für den Inhalt -->
+
       <textarea
         v-model="content"
         placeholder="Inhalt der Notiz"
@@ -13,7 +12,7 @@
         rows="5"
       ></textarea>
 
-      <!-- Eingabefeld für die field_id -->
+
       <input
         v-model="field_id"
         type="number"
@@ -21,7 +20,7 @@
         class="input-field"
       />
 
-      <!-- Button zur Notizerstellung -->
+
       <button @click="submitNote" class="submit-button">Notiz speichern</button>
     </div>
   </main>
@@ -33,16 +32,24 @@ import Cookies from 'js-cookie';
 import FarmNoteLabel from "@/components/FarmNoteLabel.vue";
 
 export default {
+
+
   components: {
     FarmNoteLabel,
   },
+
+
   data() {
     return {
       content: "",
       field_id: 1, // Beispielwert, setze dies entsprechend
     };
   },
+
+
   methods: {
+
+
     async getCurrentLocation() {
       return new Promise((resolve, reject) => {
         if (navigator.geolocation) {
@@ -62,46 +69,53 @@ export default {
         }
       });
     },
+
+
     async submitNote() {
-  try {
-    const cookieLatitude = Cookies.get('latitude');
-    const cookieLongitude = Cookies.get('longitude');
-    let latitude, longitude;
+      try {
+        const cookieLatitude = Cookies.get('latitude');
+        const cookieLongitude = Cookies.get('longitude');
+        let latitude, longitude;
 
-    // Überprüfen, ob die Cookies auf 'None' gesetzt sind
-    if (cookieLatitude === 'None' || cookieLongitude === 'None') {
-      // Wenn die Cookies None sind, verwende die aktuelle Position
-      const location = await this.getCurrentLocation();
-      latitude = location.latitude;
-      longitude = location.longitude;
-    } else {
-      // Verwende die Koordinaten aus den Cookies
-      latitude = parseFloat(cookieLatitude);
-      longitude = parseFloat(cookieLongitude);
-    }
+        // Check if the cookies are set to 'None'
+        if (cookieLatitude === 'None' && cookieLongitude === 'None') {
+          // If the cookies are none, use the current location
+          const location = await this.getCurrentLocation();
+          latitude = location.latitude;
+          longitude = location.longitude;
+        } else {
+          // Use the coordinates from the cookies
+          latitude = parseFloat(cookieLatitude);
+          longitude = parseFloat(cookieLongitude);
+        }
 
-    const token = Cookies.get("session_token"); // Token aus den Cookies abrufen
+        const token = Cookies.get("session_token"); // Token aus den Cookies abrufen
 
-    if (!token) {
-      throw new Error("Kein Token gefunden.");
-    }
+        if (!token) {
+          throw new Error("Kein Token gefunden.");
+        }
 
-    let noteData = {
-      content: this.content,
-      latitude: latitude,
-      longitude: longitude,
-      field_id: this.field_id,
-      // token: token, // Entferne den Token aus der Payload
-    };
+        let noteData = {
+          content: this.content,
+          latitude: latitude,
+          longitude: longitude,
+          field_id: this.field_id,
+        };
 
-    // Erstelle die Notiz, indem du nur die noteData übergibst
-    const createdNote = await NoteService.createNote(noteData, token); // Token als separates Argument übergeben
-    console.log("Notiz erstellt:", createdNote);
-    this.$router.push({ name: 'main-page', params: { token: token } });
-  } catch (error) {
-    console.error("Fehler beim Erstellen der Notiz:", error);
-  }
-},},}
+        const createdNote = await NoteService.createNote(noteData, token);
+
+        console.log("Create Note:", createdNote);
+
+        this.$router.push({name: 'main-page', params: {token: token}});
+
+      } catch (error) {
+        console.error("Fehler beim Erstellen der Notiz:", error.message);
+      }
+    },
+
+  },
+
+}
 
 </script>
 

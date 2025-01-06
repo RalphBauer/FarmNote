@@ -17,17 +17,21 @@ import NoteService from '../services/NoteService.js';
 import Cookies from 'js-cookie';
 
 export default {
+
   name: 'MapComponent',
+
   data() {
     return {
       map: null,
-      userLocationLayer: null,
-      notesLayer: null, // Layer für die Notizen
-      clickCount: 0, // Zähler für Klicks
+      userLocationLayer: null, // Layer for the GNSS Location
+      notesLayer: null, // Layer for the notes
+      clickCount: 0, // Counter for Mouse clicks
     };
   },
+
+
   async mounted() {
-    // Initialisiere die OpenLayers-Karte
+    // Open Layers
     this.map = new Map({
       target: 'map',
       layers: [
@@ -41,89 +45,103 @@ export default {
       }),
     });
 
-    // Erstelle einen Layer für den Benutzerstandort
+
     this.userLocationLayer = new VectorLayer({
       source: new VectorSource(),
     });
 
-    // Erstelle einen Layer für die Notizen
+
     this.notesLayer = new VectorLayer({
       source: new VectorSource(),
     });
 
-    // Füge die Layer zur Karte hinzu
+
     this.map.addLayer(this.notesLayer);
     this.map.addLayer(this.userLocationLayer);
 
-    // Lade die Notizen und füge Marker hinzu
-    await this.loadNotes();
 
-    // Füge einen Event-Listener für Linksklicks hinzu
+    await this.getAllNotes();
+
+
     this.map.on('singleclick', (event) => {
+      // get the Coordinates after mouse click
       const coordinates = this.map.getCoordinateFromPixel(event.pixel);
       const lonLat = toLonLat(coordinates);
       const latitude = lonLat[1];
       const longitude = lonLat[0];
-      console.log('Koordinaten:', { latitude, longitude });
+      console.log('Coordinates after mouse click:', { latitude, longitude });
 
-      // Erhöhe den Klickzähler
+
       this.clickCount++;
 
-      // Setze die Cookies oder setze sie auf None
+
       if (this.clickCount % 2 === 0) {
-        // Bei jedem zweiten Klick die Cookies auf None setzen
+        // Set the cookies to None on every second mouse click
         Cookies.set('latitude', 'None');
         Cookies.set('longitude', 'None');
-        console.log('Cookies gesetzt auf: None');
+        console.log('Cookies set to: None');
       } else {
-        // Speichere die Koordinaten in Cookies
+        // Store the coordinates in cookies
         Cookies.set('latitude', latitude, { expires: 7 });
         Cookies.set('longitude', longitude, { expires: 7 });
-        console.log('Cookies gesetzt auf:', { latitude, longitude });
+        console.log('Cookie latitude set to:', { latitude });
+        console.log('Cookie longitude set to:', { longitude });
       }
 
-      // Füge einen Marker an der Klickposition hinzu
+
+      // Add a marker at the click position
       this.updateMarker();
     });
 
-    // Überprüfe die Cookies und setze den Marker, falls vorhanden
+
+    // Check the cookies and set the marker if present
     this.updateMarker();
   },
+
+
   methods: {
-    async loadNotes() {
+
+
+    async getAllNotes() {
+      // Loads all Notes into the map
       try {
-        const notes = await NoteService.getAllNotes(); // Notizen abrufen
-        console.log('Abgerufene Notizen:', notes); // Überprüfen Sie die abgerufenen Notizen
+        const notes = await NoteService.getAllNotes();
+        console.log('Retrieved notes:', notes);
+
         notes.forEach(note => {
-          const { latitude, longitude } = note; // Angenommen, die Notiz hat latitude und longitude
-          this.addNoteMarker(latitude, longitude); // Marker für Notizen hinzufügen
+          const { latitude, longitude } = note;
+          this.addNoteMarker(latitude, longitude);
         });
+
       } catch (error) {
-        console.error("Fehler beim Laden der Notizen:", error);
+        console.error("Error at loading notes:", error.message);
       }
     },
+
+
     updateMarker() {
-      // Lösche alle bestehenden Marker für den temporären Marker
+      // Delete all existing markers for the temporary marker
       this.userLocationLayer.getSource().clear();
 
-      // Hole die Koordinaten aus den Cookies
+      // Retrieve the coordinates from the cookies
       const latitude = Cookies.get('latitude');
       const longitude = Cookies.get('longitude');
 
-      // Überprüfe, ob die Koordinaten vorhanden sind und nicht 'None' sind
+      // Check if the coordinates are present and not 'None'
       if (latitude !== 'None' && longitude !== 'None') {
         this.addMarker(parseFloat(latitude), parseFloat(longitude));
       }
     },
-    addMarker(lat, lon) {
-      const coords = fromLonLat([lon, lat]); // Beachten Sie die Reihenfolge
 
-            // Erstelle einen neuen temporären Marker
+
+    addMarker(lat, lon) {
+      const coords = fromLonLat([lon, lat]);
+
+      // Create a new temporary marker
       const tempMarker = new Feature({
         geometry: new Point(coords),
       });
 
-      // Stil für den temporären Marker
       tempMarker.setStyle(
         new Style({
           image: new Icon({
@@ -133,19 +151,21 @@ export default {
         })
       );
 
-      // Füge den temporären Marker dem Benutzerstandort-Layer hinzu
+      // Add the temporary marker to the user location layer
       this.userLocationLayer.getSource().addFeature(tempMarker);
     },
-    addNoteMarker(lat, lon) {
-      console.log('Füge Notiz-Marker hinzu:', { lat, lon }); // Überprüfen Sie die Koordinaten
-      const coords = fromLonLat([lon, lat]); // Beachten Sie die Reihenfolge
 
-      // Erstelle einen neuen Marker für die Notiz
+
+    addNoteMarker(lat, lon) {
+      // Creates the markers for the notes
+      console.log('Füge Notiz-Marker hinzu:', { lat, lon });
+      const coords = fromLonLat([lon, lat]);
+
+      // Create a new marker for the note
       const noteMarker = new Feature({
         geometry: new Point(coords),
       });
 
-      // Stil für den Marker
       noteMarker.setStyle(
         new Style({
           image: new Icon({
@@ -155,9 +175,11 @@ export default {
         })
       );
 
-      // Füge den Marker dem Notizen-Layer hinzu
+      // Add the marker to the notes layer
       this.notesLayer.getSource().addFeature(noteMarker);
     }
+
+
   },
 };
 </script>

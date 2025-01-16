@@ -86,13 +86,13 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      # Build and push Docker image for frontend (if applicable)
-      - name: Build and push Docker image for frontend
-        if: github.event_name == 'push'
-        uses: docker/build-push-action@v5
-        with:
-          context: frontend
-          tags: ${{ env.FRONTEND_IMAGE_NAME }}
-          push: true
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+      # # Build and push Docker image for frontend (if applicable)
+      # - name: Build and push Docker image for frontend
+      #   if: github.event_name == 'push'
+      #   uses: docker/build-push-action@v5
+      #   with:
+      #     context: frontend
+      #     tags: ${{ env.FRONTEND_IMAGE_NAME }}
+      #     push: true
+      #     cache-from: type=gha
+      #     cache-to: type=gha,mode=max

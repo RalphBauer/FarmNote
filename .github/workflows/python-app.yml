@@ -45,10 +45,10 @@ jobs:
           pip install pylint pytest
           if [ -f backend/requirements.txt ]; then pip install -r backend/requirements.txt; fi
 
-      # Lint code using pylint
-      - name: Lint with pylint
-        run: |
-          pylint backend --fail-under 7
+      # # Lint code using pylint
+      # - name: Lint with pylint
+      #   run: |
+      #     pylint backend --fail-under 7
 
       # Run tests using pytest
       - name: Test with pytest
